@@ -1,9 +1,13 @@
+import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
 import 'dart:js';
-import 'dart:math';
+import 'dart:math' as point;
 
 import 'package:flame/flame.dart';
 import 'package:flame/timer.dart';
 import 'package:tetris_game/tetrisshapes.dart';
+import 'dart:async' as timer;
 
 List<TetrimonosShape> tetrominoShapes = TetrimonosShapes.shapes;
 int currentTetrimonoIndex = 0;
@@ -12,6 +16,12 @@ int boardWidth = 10;
 
 List<List<bool>> board =
     List.generate(boardHeight, (_) => List.filled(boardWidth, false));
+
+//defining the initial position of the current tetrimono
+Point currentTetrominoPosition = Point(0, 0);
+StreamController<Point> tetrominoPositionController = StreamController<Point>();
+StreamController<List<List<bool>>> boardController =
+    StreamController<List<List<bool>>>();
 
 void startGame() {
   final timer = Timer(
@@ -24,11 +34,32 @@ void startGame() {
   timer.start();
 }
 
+void startGameA() {
+  timer.Timer.periodic(const Duration(seconds: 1), (timer) {
+    //to the tetromino down one by one
+    moveTetrominoesDown();
+    if (!canMoveTetriminoDown()) {
+      log('function works');
+      lockTetromino(TetrimonosShapes.shapes[currentTetrimonoIndex], board,
+          const point.Point(0, 0));
+      // then we check for complete rows, and clear them
+      checkForCompleteRows(board);
+      //then we spawn a new tetromino
+      spawnNewTetromino();
+    }
+  });
+}
+
 class Point {
   int row = 0;
   int col = 0;
 
   Point(this.row, this.col);
+
+  @override
+  String toString() {
+    return "Point(${this.row}, ${this.col})";
+  }
 }
 
 void moveTetrominoesDown() {
@@ -36,24 +67,48 @@ void moveTetrominoesDown() {
   if (canMoveTetriminoDown()) {
     //then we can move the current tetrimono by one
     currentTetrominoPosition.row += 1;
+    tetrominoPositionController.add(currentTetrominoPosition);
   } else {
     //add the current tetromino to the stack of tetrominoes
     addTetrominoToStack();
     //then we check if any rows on the stack are complete
-    checkForCompleteRows();
+    checkForCompleteRows(board);
     //then we spawn a new tetrimono
     spawnNewTetromino();
   }
 }
 
-void checkForCompleteRows() {
-  
+void checkForCompleteRows(List<List<bool>> board) {
+  final completeRows = <int>[];
+  for (var y = 0; y < board.length; y++) {
+    if (!board[y].contains(false)) {
+      completeRows.add(y);
+    }
+  }
 }
 
-//defining the initial position of the current tetrimono
-Point currentTetrominoPosition = Point(0,0);
+void lockTetromino(
+    TetrimonosShape shape, List<List<bool>> board, point.Point<int> position) {
+  //iterate over the shape and update the board to lock the
+  //tetromino in place0
 
-
+  for (int i = 0; i < shape.getShape().length; i++) {
+    for (int j = 0; j < shape.getShape()[i].length; j++) {
+      if (shape.getShape()[i][j]) {
+        board[position.y + i][position.x + j] = true;
+        boardController.add(board);
+      }
+    }
+    boardController.add(board);
+    log('message: tetrimono locked');
+  }
+  // The for loop is used to iterate over every cell of the tetromino shape.
+  // The loop starts with the top-left cell of the tetromino shape and moves down one row at a time
+  // until it reaches the bottom row. For each cell of the shape, it checks if it is filled or not.
+  // If the cell is filled, it updates the corresponding cell on the game board to true,
+  // which means that it is locked in2 place.
+  // Finally, it prints a message to the console to indicate that the tetromino has been locked.
+}
 
 bool canMoveTetriminoDown() {
   //get the shape of the current tetromino
@@ -72,11 +127,13 @@ bool canMoveTetriminoDown() {
 
         //check if the square is out of bonds or overlaps with another
         if (boardRow >= boardHeight || board[boardRow][boardCol]) {
+          log('message is false');
           return false;
         }
       }
     }
   }
+  log('message is true');
   return true;
 }
 
@@ -95,6 +152,8 @@ void addTetrominoToStack() {
         int boardCol = position.col + col;
         // Add the square to the stack of Tetrominoes on the board
         board[boardRow][boardCol] = true;
+        boardController.add(board);
+        log('message: tetrimono added to the stack');
       }
     }
   }
@@ -102,7 +161,10 @@ void addTetrominoToStack() {
 
 void spawnNewTetromino() {
   // Choose a random Tetromino shape
-  currentTetrominoIndex = Random().nextInt(TetrimonosShapes.shapes.length);
+  currentTetrominoIndex =
+      point.Random().nextInt(TetrimonosShapes.shapes.length);
   // Set the position of the new Tetromino to the top center of the board
   currentTetrominoPosition = Point(boardWidth ~/ 2 - 1, 0);
+  tetrominoPositionController.add(currentTetrominoPosition);
+  log('new tetrimono on the way');
 }
