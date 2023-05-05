@@ -51,27 +51,27 @@ class TetrimonosShapes {
 
 int currentTetrominoIndex = 0; 
 
-class Tetromino extends StatelessWidget {
-  final TetrimonosShape shape;
-  const Tetromino({required this.shape});
+// class Tetromino extends StatelessWidget {
+//   final TetrimonosShape shape;
+//   const Tetromino({required this.shape});
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: shape
-          .getShape()
-          .map((row) => Row(
-                children: row
-                    .map((filled) => Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                              color: filled ? shape.color : Colors.transparent,
-                              border: Border.all(color: Colors.grey.shade300)),
-                        ))
-                    .toList(),
-              ))
-          .toList(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: shape
+//           .getShape()
+//           .map((row) => Row(
+//                 children: row
+//                     .map((filled) => Container(
+//                           width: 20,
+//                           height: 20,
+//                           decoration: BoxDecoration(
+//                               color: filled ? shape.color : Colors.transparent,
+//                               border: Border.all(color: Colors.grey.shade300)),
+//                         ))
+//                     .toList(),
+//               ))
+//           .toList(),
+//     );
+//   }
+// }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tetris_game/dtetrisgame.dart';
+import 'package:tetris_game/tetriminoWidget.dart';
 import 'package:tetris_game/tetrisgame.dart';
 import 'package:tetris_game/tetrisshapes.dart';
 
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: TetrisGame(shape: TetrimonosShapes.shapes[1]),
+      home: dTetrimono(shape: TetrimonosShapes.shapes[0]),
     );
   }
 }
