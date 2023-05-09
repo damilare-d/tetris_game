@@ -31,7 +31,9 @@ class Board {
     if (_currentTetromino != null) {
       final newTetromino = _currentTetromino.copyWith(
         position: Point(
-            _currentTetromino.position.x, _currentTetromino.position.y + 1),
+          _currentTetromino.position.x,
+          _currentTetromino.position.y + 1,
+        ),
       );
       if (!_isColliding(newTetromino)) {
         _currentTetromino = newTetromino;

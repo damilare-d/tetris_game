@@ -4,9 +4,13 @@
 // import 'package:tetris_game/tetrisgame.dart';
 // import 'package:tetris_game/tetrisshapes.dart';
 
-// void main() {
-//   runApp(const MyApp());
-// }
+import 'package:flutter/widgets.dart';
+import 'package:tetris_game/tetrisgame1.dart';
+
+void main() {
+  // runApp(const MyApp());
+  runApp(const AppTetris());
+}
 
 // class MyApp extends StatelessWidget {
 //   const MyApp({super.key});

@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
+import 'dart:async';
+
 //created a model class for a shape
 //this has the basic parameter of shape and color
 class TetrimonosShape {
@@ -12,6 +14,12 @@ class TetrimonosShape {
   const TetrimonosShape({required this.shape, required this.color});
 
   List<List<bool>> getShape() => shape;
+
+  TetrimonosShape getRandomShape() {
+    return TetrimonosShapes.shapes[Random().nextInt(
+      TetrimonosShapes.shapes.length,
+    )];
+  }
 }
 
 //created a model for every shape in the game
@@ -64,7 +72,7 @@ class TetrisBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: shape
           .map((row) => Row(
                 children: row
@@ -73,10 +81,12 @@ class TetrisBlock extends StatelessWidget {
                           height: 20,
                           decoration: BoxDecoration(
                               color: isFilled ? color : Colors.transparent,
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 1,
-                              )),
+                              border: isFilled
+                                  ? Border.all(
+                                      color: Colors.grey,
+                                      width: 1,
+                                    )
+                                  : const Border()),
                         ))
                     .toList(),
               ))
@@ -143,17 +153,25 @@ class _TetrisBoardState extends State<TetrisBoard> {
   List<TetriminoBlock> activeBlocks = [];
   TetriminoBlock? currentBlock;
   TetrimonosShapes tetrimonosShapes = TetrimonosShapes();
-  int boardHeight = double.maxFinite.toInt();
-  int boardWidth = double.maxFinite.toInt();
+  int boardHeight = 720;
+  int boardWidth = 340;
   bool gameOver = false;
   int _score = 0;
   int _level = 1;
   int numlinesCleared = 0;
+  late Timer _timer;
+  Point<int> _position = Point(0, 0);
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    // _timer = Timer.periodic(Duration(seconds: 1), ((timer) {
+    //   setState(() {
+    //     _position += Point(0, 1);
+    //     _startGame();
+    //   });
+    // }));
 
     initBoard();
     spawnBlock();
@@ -166,61 +184,81 @@ class _TetrisBoardState extends State<TetrisBoard> {
 
   @override
   Widget build(BuildContext context) {
-    final blockSize = MediaQuery.of(context).size.width / (boardWidth + 2);
+    return LayoutBuilder(builder: (context, constraints) {
+      boardHeight = constraints.maxHeight.floor();
+      boardWidth = constraints.maxHeight.floor();
+      int gridCount = (boardHeight * boardWidth / 440).floor();
 
-    return GestureDetector(
-        onPanUpdate: (details) {
-          //we first get the horizontal distance and vertical
-          //distance moved by the user
-          double dx = details.delta.dx;
-          double dy = details.delta.dy;
+      final blockSize = MediaQuery.of(context).size.width / (boardWidth + 2);
+      return Center(
+        child: GestureDetector(
+            onPanUpdate: (details) {
+              //we first get the horizontal distance and vertical
+              //distance moved by the user
+              double dx = details.delta.dx;
+              double dy = details.delta.dy;
 
-          //then we check if the horizontal distance moved
-          //is greater than the vertical distance moved
-          if (dx.abs() > dy.abs()) {
-            //move the tetromino left or right based on the
-            //horizontal distance moved
-            if (dx > 0) {
-              currentBlock!.moveRight();
-            } else {
-              currentBlock!.moveLeft();
-            }
-          } else {
-            if (dy > 0) {
-              currentBlock!.rotateClockwise();
-            } else {
-              currentBlock!.rotateCounterClockwise();
-            }
-          }
-        },
-        child: Container(
-          height: boardHeight * blockSize,
-          width: boardWidth * blockSize,
-          color: Colors.grey[800],
-          child: LayoutBuilder(
-            builder: (p0, p1) => GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                itemCount: boardHeight * boardWidth,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: boardWidth,
-                  childAspectRatio: 1,
-                  mainAxisSpacing: 0,
-                  crossAxisSpacing: 0,
-                ),
-                itemBuilder: (context, index) {
-                  final row = index ~/ boardWidth;
-                  final col = index % boardWidth;
-                  final block = board[row][col];
-                  return block == null
-                      ? const SizedBox()
-                      : TetrisBlock(
-                          color: block.color,
-                          shape: block.shape,
-                        );
-                }),
-          ),
-        ));
+              //then we check if the horizontal distance moved
+              //is greater than the vertical distance moved
+              if (dx.abs() > dy.abs()) {
+                //move the tetromino left or right based on the
+                //horizontal distance moved
+                if (dx > 0) {
+                  currentBlock!.moveRight();
+                } else {
+                  currentBlock!.moveLeft();
+                }
+              } else {
+                if (dy > 0) {
+                  currentBlock!.rotateClockwise();
+                } else {
+                  currentBlock!.rotateCounterClockwise();
+                }
+              }
+            },
+            child: SizedBox(
+              height: boardHeight.toDouble(),
+              width: boardWidth.toDouble(),
+              // color: Colors.yellow[800],
+              child: GridView.builder(
+                  // physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: gridCount,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: (boardWidth / 20).toInt(),
+                    childAspectRatio: 1,
+                    mainAxisSpacing: 0.5,
+                    crossAxisSpacing: 0.5,
+                  ),
+                  itemBuilder: (context, index) {
+                    final row = index ~/ boardWidth;
+                    final col = index % boardWidth;
+                    TetriminoBlock? block = null;
+                    if (row < board.length && col < board[row].length) {
+                      block = board[row][col];
+                    }
+                    print('index: $index, row: $row, col: $col');
+                    print(
+                        'board length: ${board.length}, board width: ${board[row].length}');
+
+                    return Container(
+                      height: 20,
+                      width: 20,
+                      color: index == gridCount || index == 0
+                          ? Colors.white
+                          : Colors.red,
+                    );
+
+                    // block == null
+                    //     ? const SizedBox()
+                    //     : TetrisBlock(
+                    //         color: block.color,
+                    //         shape: block.shape,
+                    //       );
+                  }),
+            )),
+      );
+    });
   }
 
   void initBoard() {
@@ -232,13 +270,12 @@ class _TetrisBoardState extends State<TetrisBoard> {
 
   spawnBlock() {
     //choose a random block shape
-
     TetriminoBlock block = TetriminoBlock(
       color: TetrimonosShapes
           .colors[Random().nextInt(TetrimonosShapes.colors.length)],
       shape: TetrimonosShapes
           .shape[Random().nextInt(TetrimonosShapes.colors.length)],
-      position: Offset(3, 0),
+      position: Offset(Random().nextInt(boardWidth - 4).toDouble(), 0),
     );
     return block;
   }
