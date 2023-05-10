@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:tetris_game/dtetrisgame.dart';
-import 'package:tetris_game/tetrisshapes.dart';
 
 class Board {
   final int _rowCount;

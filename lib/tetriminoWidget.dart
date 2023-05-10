@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'tetrisshapes.dart';
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+
+import 'components/shapes.dart';
 
 class TetrisGamify extends StatefulWidget {
   const TetrisGamify({super.key});
