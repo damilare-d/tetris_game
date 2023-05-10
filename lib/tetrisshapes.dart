@@ -159,19 +159,11 @@ class _TetrisBoardState extends State<TetrisBoard> {
   int _score = 0;
   int _level = 1;
   int numlinesCleared = 0;
-  late Timer _timer;
-  Point<int> _position = Point(0, 0);
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _timer = Timer.periodic(Duration(seconds: 1), ((timer) {
-    //   setState(() {
-    //     _position += Point(0, 1);
-    //     _startGame();
-    //   });
-    // }));
 
     initBoard();
     spawnBlock();
@@ -221,41 +213,33 @@ class _TetrisBoardState extends State<TetrisBoard> {
               width: boardWidth.toDouble(),
               // color: Colors.yellow[800],
               child: GridView.builder(
-                  // physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemCount: gridCount,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: (boardWidth / 20).toInt(),
-                    childAspectRatio: 1,
-                    mainAxisSpacing: 0.5,
-                    crossAxisSpacing: 0.5,
-                  ),
-                  itemBuilder: (context, index) {
-                    final row = index ~/ boardWidth;
-                    final col = index % boardWidth;
-                    TetriminoBlock? block = null;
-                    if (row < board.length && col < board[row].length) {
-                      block = board[row][col];
-                    }
-                    print('index: $index, row: $row, col: $col');
-                    print(
-                        'board length: ${board.length}, board width: ${board[row].length}');
+                // physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                itemCount: gridCount,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: (boardWidth / 20).toInt(),
+                  childAspectRatio: 1,
+                  mainAxisSpacing: 0.5,
+                  crossAxisSpacing: 0.5,
+                ),
+                itemBuilder: (context, index) {
+                  final row = index ~/ boardWidth;
+                  final col = index % boardWidth;
+                  TetriminoBlock? block;
+                  late Color color;
+                  if (row < board.length && col < board[row].length) {
+                    block = board[row][col];
+                    color = block?.color ?? Colors.white;
+                  } else {
+                    color = Colors.white;
+                  }
 
-                    return Container(
-                      height: 20,
-                      width: 20,
-                      color: index == gridCount || index == 0
-                          ? Colors.white
-                          : Colors.red,
-                    );
-
-                    // block == null
-                    //     ? const SizedBox()
-                    //     : TetrisBlock(
-                    //         color: block.color,
-                    //         shape: block.shape,
-                    //       );
-                  }),
+                  return TetrisBlock(
+                    color: color,
+                    shape: block?.shape ?? const [],
+                  );
+                },
+              ),
             )),
       );
     });
