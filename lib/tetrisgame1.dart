@@ -41,87 +41,100 @@ class _TetrisGameState extends State<TetrisGame> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tetris App'),
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        height: height,
-        width: width,
-        // decoration: const BoxDecoration(
-        //   color: Colors.black,
-        // ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            //first container to show the tetris shape that is coming
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              height: height * 0.1,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(6),
+      body: LayoutBuilder(builder: (context, constraints) {
+        final height = constraints.maxHeight;
+        final width = constraints.maxWidth;
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          height: height,
+          width: width,
+          // decoration: const BoxDecoration(
+          //   color: Colors.black,
+          // ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //first container to show the tetris shape that is coming
+              SizedBox(
+                height: height * 0.1,
+                child: Container(
+                  margin: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TetrisBlock(
+                        color: nextShape.getRandomShape().color,
+                        shape: nextShape.getRandomShape().shape,
+                      ),
+                      TetrisBlock(
+                        color: nextShape.getRandomShape().color,
+                        shape: nextShape.getRandomShape().shape,
+                      ),
+                      TetrisBlock(
+                        color: nextShape.getRandomShape().color,
+                        shape: nextShape.getRandomShape().shape,
+                      ),
+                      TetrisBlock(
+                        color: nextShape.getRandomShape().color,
+                        shape: nextShape.getRandomShape().shape,
+                      ),
+                      TetrisBlock(
+                        color: nextShape.getRandomShape().color,
+                        shape: nextShape.getRandomShape().shape,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TetrisBlock(
-                    color: nextShape.getRandomShape().color,
-                    shape: nextShape.getRandomShape().shape,
+              // SizedBox(
+              //   height: height * 0.033,
+              // ),
+              //second container to show the tetris game dropping and all
+              SizedBox(
+                height: height * 0.8,
+                // width: width * 0.5,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(6),
                   ),
-                  TetrisBlock(
-                    color: nextShape.getRandomShape().color,
-                    shape: nextShape.getRandomShape().shape,
+                  child: TetrisBoard(
+                    height: height * 0.8,
+                    width: 300,
                   ),
-                  TetrisBlock(
-                    color: nextShape.getRandomShape().color,
-                    shape: nextShape.getRandomShape().shape,
-                  ),
-                  TetrisBlock(
-                    color: nextShape.getRandomShape().color,
-                    shape: nextShape.getRandomShape().shape,
-                  ),
-                  TetrisBlock(
-                    color: nextShape.getRandomShape().color,
-                    shape: nextShape.getRandomShape().shape,
-                  ),
-                ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            //second container to show the tetris game dropping and all
-            Container(
-              height: height * 0.6,
-              width: width,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(6),
+              // SizedBox(
+              //   height: height * 0.033,
+              // ),
+              //third container to show the score
+              SizedBox(
+                height: height * 0.1,
+                child: Container(
+                  margin: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
               ),
-              child: TetrisBoard(),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            //third container to show the score
-            Container(
-              height: height * 0.1,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-          ],
-        ),
-      ),
+              // SizedBox(
+              //   height: height * 0.033,
+              // ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
