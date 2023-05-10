@@ -1,13 +1,11 @@
 import 'dart:async';
+import 'dart:async' as timer;
 import 'dart:developer';
-import 'dart:io';
-import 'dart:js';
 import 'dart:math' as point;
 
-import 'package:flame/flame.dart';
 import 'package:flame/timer.dart';
-import 'package:tetris_game/tetrisshapes.dart';
-import 'dart:async' as timer;
+
+import 'models/shapes.dart';
 
 List<TetrimonosShape> tetrominoShapes = TetrimonosShapes.shapes;
 int currentTetrimonoIndex = 0;
@@ -161,8 +159,8 @@ void addTetrominoToStack() {
 
 void spawnNewTetromino() {
   // Choose a random Tetromino shape
-  currentTetrominoIndex =
-      point.Random().nextInt(TetrimonosShapes.shapes.length);
+  // currentTetrominoIndex =
+  //     point.Random().nextInt(TetrimonosShapes.shapes.length);
   // Set the position of the new Tetromino to the top center of the board
   currentTetrominoPosition = Point(boardWidth ~/ 2 - 1, 0);
   tetrominoPositionController.add(currentTetrominoPosition);

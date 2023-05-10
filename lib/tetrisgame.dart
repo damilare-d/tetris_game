@@ -1,11 +1,10 @@
-import 'package:flame/experimental.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:tetris_game/tetrisLogic.dart';
-import 'tetrisshapes.dart';
-import 'dart:math' as po;
 import 'dart:async';
+import 'dart:math' as po;
+
+import 'package:flutter/material.dart';
+import 'package:tetris_game/tetrisLogic.dart';
+
+import 'models/shapes.dart';
 
 class TetrisGame extends StatefulWidget {
   final TetrimonosShape shape;
