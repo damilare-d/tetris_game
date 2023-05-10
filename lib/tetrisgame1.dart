@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:tetris_game/tetrisshapes.dart';
+import 'package:tetris_game/tetris_board.dart';
 
 import 'models/shapes.dart';
 import 'widgets/tetris_block.dart';
