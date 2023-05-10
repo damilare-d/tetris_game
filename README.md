@@ -1,8 +1,11 @@
 # tetris_game
 
-A new Flutter project.
+A simple tetris game in development.
 
 ## Getting Started
+
+![tetris002](https://github.com/damilare-d/tetris_game/assets/83401880/508c4a29-c3ff-497f-85f2-970a6b17ac08)
+
 
 This project is a starting point for a Flutter application.
 
