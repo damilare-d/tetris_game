@@ -15,27 +15,31 @@ class TetrisGamify extends StatefulWidget {
 class _TetrisGamifyState extends State<TetrisGamify> {
   @override
   Widget build(BuildContext context) {
-    return TetrominoWidget(
-      board: [],
-      onBoardUpdate: ,
-      shape: ,
-    );
+    return Placeholder();
+    // return TetrominoWidget(
+    //   board: [],
+    //   onBoardUpdate: ,
+    //   shape: ,
+    // );
   }
 }
 
 class TetrominoWidget extends StatefulWidget {
-  final TetrimonosShape shape = TetrimonosShape(shape: TetrimonosShapes.shapes[0].shape, color: TetrimonosShapes.shapes[1].color,);
-  final List<List<bool>> board = [];
-  final ValueChanged<List<List<bool>>> onBoardUpdate ;
+  final TetrimonosShape shape = TetrimonosShape(
+    shape: TetrimonosShapes.shapes[0].shape,
+    color: TetrimonosShapes.shapes[1].color,
+  );
+  final List<List<bool>> board;
+  final ValueChanged<List<List<bool>>> onBoardUpdate;
 
-  TetrominoWidget({ this.shape, required this.board, required this.onBoardUpdate});
+  TetrominoWidget({required this.board, required this.onBoardUpdate});
 
   @override
   _TetrominoWidgetState createState() => _TetrominoWidgetState();
 }
 
 class _TetrominoWidgetState extends State<TetrominoWidget> {
-Point<int> _position = Point(0, 0);
+  Point<int> _position = Point(0, 0);
   late Timer _timer;
 
   @override
@@ -65,7 +69,10 @@ Point<int> _position = Point(0, 0);
         if (widget.shape.getShape()[i][j]) {
           int x = _position.x + j;
           int y = _position.y + i;
-          if (y >= widget.board.length || x < 0 || x >= widget.board[y].length || widget.board[y][x]) {
+          if (y >= widget.board.length ||
+              x < 0 ||
+              x >= widget.board[y].length ||
+              widget.board[y][x]) {
             return true;
           }
         }
@@ -104,7 +111,9 @@ Point<int> _position = Point(0, 0);
                         width: 20,
                         height: 20,
                         decoration: BoxDecoration(
-                            color: filled ? widget.shape.color : Colors.transparent,
+                            color: filled[key]
+                                ? widget.shape.color
+                                : Colors.transparent,
                             border: Border.all(color: Colors.grey.shade300)),
                       ),
                     ))
