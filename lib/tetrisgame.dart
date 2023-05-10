@@ -4,7 +4,7 @@ import 'dart:math' as po;
 import 'package:flutter/material.dart';
 import 'package:tetris_game/tetrisLogic.dart';
 
-import 'components/shapes.dart';
+import 'models/shapes.dart';
 
 class TetrisGame extends StatefulWidget {
   final TetrimonosShape shape;

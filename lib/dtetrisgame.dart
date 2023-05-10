@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'components/shapes.dart';
+import 'models/shapes.dart';
 
 class Tetromino {
   final TetrimonosShape shape;

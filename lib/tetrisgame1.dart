@@ -3,12 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tetris_game/tetrisshapes.dart';
 
-import 'components/shapes.dart';
-import 'components/tetris_block.dart';
-
-// void main() {
-//   runApp(const AppTetris());
-// }
+import 'models/shapes.dart';
+import 'widgets/tetris_block.dart';
 
 class AppTetris extends StatelessWidget {
   const AppTetris({super.key});

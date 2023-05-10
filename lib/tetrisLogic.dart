@@ -5,7 +5,7 @@ import 'dart:math' as point;
 
 import 'package:flame/timer.dart';
 
-import 'components/shapes.dart';
+import 'models/shapes.dart';
 
 List<TetrimonosShape> tetrominoShapes = TetrimonosShapes.shapes;
 int currentTetrimonoIndex = 0;

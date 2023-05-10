@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'components/shapes.dart';
 import 'enums/shape_types.dart';
+import 'models/shapes.dart';
 import 'models/tetris_shape.dart';
 
 class TetrisBoard extends StatefulWidget {
