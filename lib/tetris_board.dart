@@ -48,7 +48,7 @@ class _TetrisBoardState extends State<TetrisBoard> {
       if (movingShape.baseBlock < 1485) {
         print("Moving shape: ${movingShape.baseBlock}");
         colorMap.addEntries(movingShape.indexes.map((e) => MapEntry(e, null)));
-        movingShape.moveDown();
+        movingShape.moveRight();
         colorMap.addEntries(
             movingShape.indexes.map((e) => MapEntry(e, movingShape.color)));
         setState(() {});

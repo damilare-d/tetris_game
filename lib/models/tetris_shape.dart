@@ -89,6 +89,31 @@ class TetrisShape {
     ];
   }
 
+  void moveRight() {
+    _blocks = [
+      _Block(_blocks[0].index + 1, color),
+      _Block(_blocks[1].index + 1, color),
+      _Block(_blocks[2].index + 1, color),
+      _Block(_blocks[3].index + 1, color),
+    ];
+  }
+
+  void moveLeft() {
+    _blocks = [
+      _Block(_blocks[0].index - 1, color),
+      _Block(_blocks[1].index - 1, color),
+      _Block(_blocks[2].index - 1, color),
+      _Block(_blocks[3].index - 1, color),
+    ];
+  }
+
+  //todo: rotate function clockwise need to be written
+  void rotateClockwise() {
+    _blocks = [
+      //will the function for each tetrimino be different
+    ];
+  }
+
   List<int> get indexes => _blocks.map((e) => e.index).toList();
 }
 
