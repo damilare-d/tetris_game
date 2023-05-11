@@ -29,7 +29,7 @@ class _TetrisBoardState extends State<TetrisBoard> {
   late TetrisShape movingShape = TetrisShape(
       rowCount: gridHorizontalCount,
       firstBlock: 15,
-      type: ShapeType.i,
+      type: ShapeType.s,
       color: Colors.red);
   late List<TetrisShape> stationaryShapes = [
     TetrisShape(

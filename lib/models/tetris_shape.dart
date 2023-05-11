@@ -32,11 +32,47 @@ class TetrisShape {
           _Block(firstBlock + rowCount * 3, color),
         ];
       case ShapeType.box:
+        return [
+          _Block(firstBlock, color),
+          _Block(firstBlock + 1, color),
+          _Block(firstBlock + rowCount, color),
+          _Block(firstBlock + rowCount + 1, color),
+        ];
       case ShapeType.z:
+        return [
+          _Block(firstBlock, color),
+          _Block(firstBlock + 1, color),
+          _Block(firstBlock + 1 + rowCount, color),
+          _Block(firstBlock + 2 + rowCount, color)
+        ];
       case ShapeType.t:
+        return [
+          _Block(firstBlock, color),
+          _Block(firstBlock + 1, color),
+          _Block(firstBlock + 2, color),
+          _Block(firstBlock + 1 + rowCount, color)
+        ];
       case ShapeType.l:
+        return [
+          _Block(firstBlock, color),
+          _Block(firstBlock + rowCount, color),
+          _Block(firstBlock + rowCount * 2, color),
+          _Block(firstBlock + rowCount * 2 + 1, color),
+        ];
       case ShapeType.j:
+        return [
+          _Block(firstBlock, color),
+          _Block(firstBlock + rowCount, color),
+          _Block(firstBlock + rowCount * 2, color),
+          _Block(firstBlock + rowCount * 2 - 1, color),
+        ];
       case ShapeType.s:
+        return [
+          _Block(firstBlock, color),
+          _Block(firstBlock - 1, color),
+          _Block(firstBlock - 1 + rowCount, color),
+          _Block(firstBlock - 2 + rowCount, color)
+        ];
       default:
         return _blocks;
     }
