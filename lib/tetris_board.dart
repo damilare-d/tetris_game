@@ -28,7 +28,7 @@ class _TetrisBoardState extends State<TetrisBoard> {
   int numlinesCleared = 0;
   late TetrisShape movingShape = TetrisShape(
       rowCount: gridHorizontalCount,
-      firstBlock: 1,
+      firstBlock: 15,
       type: ShapeType.s,
       color: Colors.red);
   late List<TetrisShape> stationaryShapes = [
@@ -45,8 +45,15 @@ class _TetrisBoardState extends State<TetrisBoard> {
     super.initState();
 
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
-      List<int> unreachable = List.generate(30, (index) => gridCount - index);
-      if (unreachable.any((e) => movingShape.baseBlock >= e)) {
+      Set<int> floor = List.generate(30, (index) => gridCount - index).toSet();
+      Set<int> stationaryCeils = {};
+      stationaryShapes.forEach((element) {
+        stationaryCeils.addAll(element.indexes.map((e) => e - 30));
+      });
+      if (floor.any((e) => movingShape.baseBlock >= e) ||
+          stationaryCeils.any((e) => movingShape.baseBlock == e)) {
+        stationaryShapes.add(movingShape);
+        //TODO: Spawn new shape
         return;
       }
       print("Moving shape: ${movingShape.baseBlock}");
