@@ -78,47 +78,61 @@ class _TetrisBoardState extends State<TetrisBoard> {
     double gridHeight = widget.height;
 
     final blockSize = MediaQuery.of(context).size.width / (widget.width + 2);
-    return GestureDetector(
-      onPanUpdate: (details) {
-        //we first get the horizontal distance and vertical
-        //distance moved by the user
-        double dx = details.delta.dx;
-        double dy = details.delta.dy;
-
-        //then we check if the horizontal distance moved
-        //is greater than the vertical distance moved
-        if (dx.abs() > dy.abs()) {
-          //move the tetromino left or right based on the
-          //horizontal distance moved
-          if (dx > 0) {
-            currentBlock!.moveRight();
-          } else {
-            currentBlock!.moveLeft();
-          }
-        } else {
-          if (dy > 0) {
-            currentBlock!.rotateClockwise();
-          } else {
-            currentBlock!.rotateCounterClockwise();
-          }
-        }
-      },
-      child: SizedBox(
-        height: gridHeight,
-        width: gridWidth,
-        // color: Colors.yellow[800],
-        child: Builder(builder: (context) {
-          return MyGrid(
-              crossAxisCount: gridHorizontalCount,
-              children: List.generate(
-                  gridVerticalCount * gridHorizontalCount,
-                  (index) => Container(
-                        color: colorMap[index] ?? Colors.black,
-                        height: gridHeight / gridVerticalCount,
-                        width: gridHeight / gridVerticalCount,
-                      )));
-        }),
-      ),
+    return Stack(
+      children: [
+        SizedBox(
+          height: gridHeight,
+          width: gridWidth,
+          // color: Colors.yellow[800],
+          child: Builder(builder: (context) {
+            return MyGrid(
+                crossAxisCount: gridHorizontalCount,
+                children: List.generate(
+                    gridVerticalCount * gridHorizontalCount,
+                    (index) => Container(
+                          color: colorMap[index] ?? Colors.black,
+                          height: gridHeight / gridVerticalCount,
+                          width: gridHeight / gridVerticalCount,
+                        )));
+          }),
+        ),
+        Positioned(
+          right: 0,
+          child: GestureDetector(
+            onTap: () {
+              print("Move right");
+              colorMap.addEntries(
+                  movingShape.indexes.map((e) => MapEntry(e, null)));
+              movingShape.moveRight();
+              colorMap.addEntries(movingShape.indexes
+                  .map((e) => MapEntry(e, movingShape.color)));
+            },
+            child: Container(
+              color: Colors.grey.withOpacity(0.1),
+              height: gridHeight,
+              width: gridWidth * 0.5,
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          child: GestureDetector(
+            onTap: () {
+              print("Move Left");
+              colorMap.addEntries(
+                  movingShape.indexes.map((e) => MapEntry(e, null)));
+              movingShape.moveLeft();
+              colorMap.addEntries(movingShape.indexes
+                  .map((e) => MapEntry(e, movingShape.color)));
+            },
+            child: Container(
+              color: Colors.grey.withOpacity(0.1),
+              height: gridHeight,
+              width: gridWidth * 0.5,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
