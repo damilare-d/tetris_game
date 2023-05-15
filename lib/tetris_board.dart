@@ -53,7 +53,7 @@ class _TetrisBoardState extends State<TetrisBoard> {
       if (floor.any((e) => movingShape.baseBlock >= e) ||
           stationaryCeils.any((e) => movingShape.baseBlock == e)) {
         stationaryShapes.add(movingShape);
-        //TODO: Spawn new shape
+        spawnNewShape();
         return;
       }
       print("Moving shape: ${movingShape.baseBlock}");
@@ -66,6 +66,14 @@ class _TetrisBoardState extends State<TetrisBoard> {
 
     initBoard();
     spawnBlock();
+  }
+
+  void spawnNewShape() {
+    movingShape = TetrisShape(
+        rowCount: gridHorizontalCount,
+        firstBlock: 15,
+        type: ShapeType.values[Random().nextInt(ShapeType.values.length)],
+        color: shapeColors[Random().nextInt(shapeColors.length)]);
   }
 
   void _startGame() {
@@ -264,3 +272,12 @@ class MyGrid extends StatelessWidget {
     );
   }
 }
+
+List<Color> shapeColors = [
+  Colors.red,
+  Colors.green,
+  Colors.blue,
+  Colors.deepPurpleAccent,
+  Colors.orange,
+  Colors.yellowAccent,
+];
