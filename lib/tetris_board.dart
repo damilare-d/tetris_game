@@ -16,8 +16,8 @@ class TetrisBoard extends StatefulWidget {
 }
 
 class _TetrisBoardState extends State<TetrisBoard> {
-  final int gridHorizontalCount = 30;
-  final int gridVerticalCount = 50;
+  final int gridHorizontalCount = 25;
+  final int gridVerticalCount = 45;
   late final int gridCount = gridHorizontalCount * gridVerticalCount;
   List<List<TetriminoBlock?>> board = [];
   List<TetriminoBlock> activeBlocks = [];
@@ -28,13 +28,13 @@ class _TetrisBoardState extends State<TetrisBoard> {
   int numlinesCleared = 0;
   late TetrisShape movingShape = TetrisShape(
       rowCount: gridHorizontalCount,
-      firstBlock: 1,
+      firstBlock: 12,
       type: ShapeType.s,
       color: Colors.red);
   late List<TetrisShape> stationaryShapes = [
     TetrisShape(
         rowCount: gridHorizontalCount,
-        firstBlock: 1380,
+        firstBlock: 1025,
         type: ShapeType.i,
         color: Colors.blue)
   ];
@@ -45,8 +45,15 @@ class _TetrisBoardState extends State<TetrisBoard> {
     super.initState();
 
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
-      List<int> unreachable = List.generate(30, (index) => gridCount - index);
-      if (unreachable.any((e) => movingShape.baseBlock >= e)) {
+      Set<int> floor = List.generate(25, (index) => gridCount - index).toSet();
+      Set<int> stationaryCeils = {};
+      stationaryShapes.forEach((element) {
+        stationaryCeils.addAll(element.indexes.map((e) => e - 25));
+      });
+      if (floor.any((e) => movingShape.baseBlock >= e) ||
+          stationaryCeils.any((e) => movingShape.baseBlock == e)) {
+        stationaryShapes.add(movingShape);
+        spawnNewShape();
         return;
       }
       print("Moving shape: ${movingShape.baseBlock}");
@@ -59,6 +66,14 @@ class _TetrisBoardState extends State<TetrisBoard> {
 
     initBoard();
     spawnBlock();
+  }
+
+  void spawnNewShape() {
+    movingShape = TetrisShape(
+        rowCount: gridHorizontalCount,
+        firstBlock: 15,
+        type: ShapeType.values[Random().nextInt(ShapeType.values.length)],
+        color: shapeColors[Random().nextInt(shapeColors.length)]);
   }
 
   void _startGame() {
@@ -78,47 +93,61 @@ class _TetrisBoardState extends State<TetrisBoard> {
     double gridHeight = widget.height;
 
     final blockSize = MediaQuery.of(context).size.width / (widget.width + 2);
-    return GestureDetector(
-      onPanUpdate: (details) {
-        //we first get the horizontal distance and vertical
-        //distance moved by the user
-        double dx = details.delta.dx;
-        double dy = details.delta.dy;
-
-        //then we check if the horizontal distance moved
-        //is greater than the vertical distance moved
-        if (dx.abs() > dy.abs()) {
-          //move the tetromino left or right based on the
-          //horizontal distance moved
-          if (dx > 0) {
-            currentBlock!.moveRight();
-          } else {
-            currentBlock!.moveLeft();
-          }
-        } else {
-          if (dy > 0) {
-            currentBlock!.rotateClockwise();
-          } else {
-            currentBlock!.rotateCounterClockwise();
-          }
-        }
-      },
-      child: SizedBox(
-        height: gridHeight,
-        width: gridWidth,
-        // color: Colors.yellow[800],
-        child: Builder(builder: (context) {
-          return MyGrid(
-              crossAxisCount: gridHorizontalCount,
-              children: List.generate(
-                  gridVerticalCount * gridHorizontalCount,
-                  (index) => Container(
-                        color: colorMap[index] ?? Colors.black,
-                        height: gridHeight / gridVerticalCount,
-                        width: gridHeight / gridVerticalCount,
-                      )));
-        }),
-      ),
+    return Stack(
+      children: [
+        SizedBox(
+          height: gridHeight,
+          width: gridWidth,
+          // color: Colors.yellow[800],
+          child: Builder(builder: (context) {
+            return MyGrid(
+                crossAxisCount: gridHorizontalCount,
+                children: List.generate(
+                    gridVerticalCount * gridHorizontalCount,
+                    (index) => Container(
+                          color: colorMap[index] ?? Colors.black,
+                          height: gridHeight / gridVerticalCount,
+                          width: gridHeight / gridVerticalCount,
+                        )));
+          }),
+        ),
+        Positioned(
+          right: 0,
+          child: GestureDetector(
+            onTap: () {
+              print("Move right");
+              colorMap.addEntries(
+                  movingShape.indexes.map((e) => MapEntry(e, null)));
+              movingShape.moveRight();
+              colorMap.addEntries(movingShape.indexes
+                  .map((e) => MapEntry(e, movingShape.color)));
+            },
+            child: Container(
+              color: Colors.grey.withOpacity(0.1),
+              height: gridHeight,
+              width: gridWidth * 0.5,
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          child: GestureDetector(
+            onTap: () {
+              print("Move Left");
+              colorMap.addEntries(
+                  movingShape.indexes.map((e) => MapEntry(e, null)));
+              movingShape.moveLeft();
+              colorMap.addEntries(movingShape.indexes
+                  .map((e) => MapEntry(e, movingShape.color)));
+            },
+            child: Container(
+              color: Colors.grey.withOpacity(0.1),
+              height: gridHeight,
+              width: gridWidth * 0.5,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -243,3 +272,12 @@ class MyGrid extends StatelessWidget {
     );
   }
 }
+
+List<Color> shapeColors = [
+  Colors.red,
+  Colors.green,
+  Colors.blue,
+  Colors.deepPurpleAccent,
+  Colors.orange,
+  Colors.yellowAccent,
+];

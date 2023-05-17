@@ -82,10 +82,10 @@ class TetrisShape {
 
   void moveDown() {
     _blocks = [
-      _Block(_blocks[0].index + 30, color),
-      _Block(_blocks[1].index + 30, color),
-      _Block(_blocks[2].index + 30, color),
-      _Block(_blocks[3].index + 30, color),
+      _Block(_blocks[0].index + 25, color),
+      _Block(_blocks[1].index + 25, color),
+      _Block(_blocks[2].index + 25, color),
+      _Block(_blocks[3].index + 25, color),
     ];
   }
 
