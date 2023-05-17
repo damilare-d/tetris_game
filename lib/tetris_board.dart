@@ -16,8 +16,8 @@ class TetrisBoard extends StatefulWidget {
 }
 
 class _TetrisBoardState extends State<TetrisBoard> {
-  final int gridHorizontalCount = 30;
-  final int gridVerticalCount = 50;
+  final int gridHorizontalCount = 25;
+  final int gridVerticalCount = 45;
   late final int gridCount = gridHorizontalCount * gridVerticalCount;
   List<List<TetriminoBlock?>> board = [];
   List<TetriminoBlock> activeBlocks = [];
@@ -28,13 +28,13 @@ class _TetrisBoardState extends State<TetrisBoard> {
   int numlinesCleared = 0;
   late TetrisShape movingShape = TetrisShape(
       rowCount: gridHorizontalCount,
-      firstBlock: 15,
+      firstBlock: 12,
       type: ShapeType.s,
       color: Colors.red);
   late List<TetrisShape> stationaryShapes = [
     TetrisShape(
         rowCount: gridHorizontalCount,
-        firstBlock: 1380,
+        firstBlock: 1025,
         type: ShapeType.i,
         color: Colors.blue)
   ];
@@ -45,10 +45,10 @@ class _TetrisBoardState extends State<TetrisBoard> {
     super.initState();
 
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
-      Set<int> floor = List.generate(30, (index) => gridCount - index).toSet();
+      Set<int> floor = List.generate(25, (index) => gridCount - index).toSet();
       Set<int> stationaryCeils = {};
       stationaryShapes.forEach((element) {
-        stationaryCeils.addAll(element.indexes.map((e) => e - 30));
+        stationaryCeils.addAll(element.indexes.map((e) => e - 25));
       });
       if (floor.any((e) => movingShape.baseBlock >= e) ||
           stationaryCeils.any((e) => movingShape.baseBlock == e)) {
